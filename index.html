@@ -6,6 +6,14 @@
 
 <title>Твой Учет</title>
 
+<link rel="manifest" href="./manifest.json">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Твой Учет">
+
+<link rel="apple-touch-icon" href="./logo.png">
+
 <style>
 @font-face {
   font-family: 'Fraunces';
@@ -3319,6 +3327,14 @@ buildMenu('');
 
 newDeck();
 
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js');
+    });
+}
 </script>
 
 </body>
