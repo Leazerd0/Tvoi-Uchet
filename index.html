@@ -1,0 +1,3325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Твой Учет</title>
+
+<style>
+@font-face {
+  font-family: 'Fraunces';
+  src: url('./fonts/Fraunces9pt-Regular.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./fonts/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pacifico';
+  src: url('./fonts/Pacifico-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+</style>
+
+<style>
+  :root{
+  --bg:#EFE9DA;--paper:#FBF8F1;--ink:#20281F;--ink-soft:#5B6155;--line:rgba(32,40,31,0.14);
+  --card-front:#1D2E24;--card-front-2:#16241B;--card-text:#E9DFC4;
+  --brass:#B08A3E;--brass-soft:rgba(176,138,62,0.18);--accent:#6B4A2D;
+  --good:#3E7A52;--good-soft:rgba(62,122,82,0.16);--bad:#A5473A;--bad-soft:rgba(165,71,58,0.16);
+  --shadow:rgba(20,24,18,0.28);--focus:#B08A3E;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121712;--paper:#1B2119;--ink:#E9E3D3;--ink-soft:#A9A794;--line:rgba(233,227,211,0.14);
+    --card-front:#101B14;--card-front-2:#0B140F;--card-text:#E9DFC4;
+    --brass:#C7A458;--brass-soft:rgba(199,164,88,0.16);--accent:#C7A458;
+    --good:#5FAE79;--good-soft:rgba(95,174,121,0.16);--bad:#D08072;--bad-soft:rgba(208,128,114,0.16);
+    --shadow:rgba(0,0,0,0.55);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121712;--paper:#1B2119;--ink:#E9E3D3;--ink-soft:#A9A794;--line:rgba(233,227,211,0.14);
+  --card-front:#101B14;--card-front-2:#0B140F;--card-text:#E9DFC4;
+  --brass:#C7A458;--brass-soft:rgba(199,164,88,0.16);--accent:#C7A458;
+  --good:#5FAE79;--good-soft:rgba(95,174,121,0.16);--bad:#D08072;--bad-soft:rgba(208,128,114,0.16);
+  --shadow:rgba(0,0,0,0.55);
+}
+html{height:100%;}
+*{box-sizing:border-box;}
+body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Fraunces',Georgia,serif;-webkit-tap-highlight-color:transparent;overflow-x:hidden;}
+button,input{font-family:inherit;}
+*:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+
+/* Login screen */
+.login-screen{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-card{ justify-content:center;flex-direction:column;display:flex;width:100%;max-width:360px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:50px 24px;box-shadow:0 18px 40px -14px var(--shadow);text-align:center;min-height:420px;}
+.login-emoji{font-size:34px;width:60px;height:60px;border-radius:14px;background:var(--brass-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.login-title{font-size:18px;font-weight:600;margin:0 0 6px;}
+.login-sub{font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;margin:0 0 20px;line-height:1.5;}
+.login-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:1px;text-align:center;margin-bottom:12px;}
+.login-input::placeholder{color:var(--ink-soft);letter-spacing:0;}
+.login-error{min-height:18px;font-size:12px;color:var(--bad);font-family:'JetBrains Mono',monospace;margin:0 0 12px;}
+.login-btn{width:100%;padding:15px;border-radius:12px;border:none;background:var(--accent);color:var(--paper);font-size:16px;font-weight:600;cursor:pointer;}
+.login-btn:active{transform:scale(0.98);}
+.login-btn:disabled{opacity:0.6;cursor:default;}
+.login-logo{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:8px;
+  line-height:0.82;
+  user-select:none;
+  transform:translateY(-20px);
+}
+
+.login-logo-word{
+  font-family:'Pacifico',cursive;
+  font-size:clamp(32px,7vw,48px);
+  font-weight:400;
+  letter-spacing:0.01em;
+  -webkit-text-stroke:2px #11140F;
+  paint-order:stroke fill;
+  text-shadow:0 2px 3px rgba(20,24,18,0.22);
+}
+
+
+.login-logo-top{
+  color:#D8D0BA;
+}
+
+.login-logo-bottom{
+  color:#244635;
+}
+  :root {
+    --bg: #EFE9DA;
+    --paper: #FBF8F1;
+    --ink: #20281F;
+    --ink-soft: #5B6155;
+    --line: rgba(32,40,31,0.14);
+    --card-front: #1D2E24;
+    --card-front-2: #16241B;
+    --card-text: #E9DFC4;
+    --brass: #B08A3E;
+    --brass-soft: rgba(176,138,62,0.18);
+    --accent: #6B4A2D;
+    --shadow: rgba(20,24,18,0.28);
+    --focus: #B08A3E;
+
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121712;
+      --paper: #1B2119;
+      --ink: #E9E3D3;
+      --ink-soft: #A9A794;
+      --line: rgba(233,227,211,0.14);
+      --card-front: #101B14;
+      --card-front-2: #0B140F;
+      --card-text: #E9DFC4;
+      --brass: #C7A458;
+      --brass-soft: rgba(199,164,88,0.16);
+      --accent: #C7A458;
+      --shadow: rgba(0,0,0,0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #121712;
+    --paper: #1B2119;
+    --ink: #E9E3D3;
+    --ink-soft: #A9A794;
+    --line: rgba(233,227,211,0.14);
+    --card-front: #101B14;
+    --card-front-2: #0B140F;
+    --card-text: #E9DFC4;
+    --brass: #C7A458;
+    --brass-soft: rgba(199,164,88,0.16);
+    --accent: #C7A458;
+    --shadow: rgba(0,0,0,0.55);
+  }
+
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+    height: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--brass-soft);
+  }
+
+  /* =========================
+     TOP BAR
+  ========================= */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 20;
+  }
+
+  .menu-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .menu-btn:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .menu-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .topbar-space {
+    flex: 1;
+  }
+
+  /* =========================
+     MAIN / EMPTY SCREEN
+  ========================= */
+
+  main {
+    min-height: calc(100% - 74px);
+    width: 100%;
+  }
+
+  .empty-screen {
+    min-height: calc(100vh - 74px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px 20px;
+  }
+
+  .empty-screen-content {
+    text-align: center;
+    color: var(--ink-soft);
+    max-width: 320px;
+  }
+
+  .empty-screen-content p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .app-logo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 8px;
+    line-height: 0.82;
+    user-select: none;
+  }
+
+  .app-logo-word {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(38px, 8vw, 58px);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    -webkit-text-stroke: 2px #11140F;
+    paint-order: stroke fill;
+    text-shadow: 0 2px 3px rgba(20,24,18,0.22);
+  }
+
+  .app-logo-top {
+    color: #D8D0BA;
+  }
+
+  .app-logo-bottom {
+    margin-left: clamp(28px, 7vw, 48px);
+    color: #244635;
+  }
+
+  /* =========================
+     CARDS GAME SCREEN
+  ========================= */
+
+  #cardsScreen {
+    display: none;
+  }
+
+  .cards-main {
+    padding: 28px 20px 48px;
+    max-width: 520px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-height: calc(100vh - 74px);
+  }
+
+  .progress-row {
+    width: 100%;
+    max-width: 360px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    margin-bottom: 18px;
+
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .section-tag {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 3 / 4;
+    perspective: 1400px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(.4,.2,.2,1);
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .face {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 18px;
+
+    backface-visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 28px;
+
+    text-align: center;
+
+    box-shadow: 0 18px 40px -12px var(--shadow);
+  }
+
+  .face-front {
+    background:
+      radial-gradient(
+        120% 90% at 15% 0%,
+        rgba(255,255,255,0.06),
+        transparent 60%
+      ),
+      linear-gradient(
+        160deg,
+        var(--card-front),
+        var(--card-front-2)
+      );
+
+    border: 1px solid rgba(199,164,88,0.35);
+
+    color: var(--card-text);
+  }
+
+  .face-front::before {
+    content: '';
+
+    position: absolute;
+    inset: 10px;
+
+    border: 1px solid rgba(199,164,88,0.22);
+    border-radius: 12px;
+
+    pointer-events: none;
+  }
+
+  .code {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 58px;
+    letter-spacing: 0.02em;
+    color: var(--brass);
+  }
+
+  .code-hint {
+    margin-top: 14px;
+
+    font-size: 12px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    color: rgba(233,223,196,0.55);
+
+    letter-spacing: 0.03em;
+  }
+
+  .face-back {
+    background: var(--paper);
+    color: var(--ink);
+
+    border: 1px solid var(--line);
+
+    transform: rotateY(180deg);
+  }
+
+  .back-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 12px;
+
+    color: var(--accent);
+
+    margin-bottom: 10px;
+
+    letter-spacing: 0.02em;
+  }
+
+  .back-name {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.32;
+  }
+
+  .controls {
+    width: 100%;
+    max-width: 360px;
+
+    margin-top: 22px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .next-btn {
+    width: 100%;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    background: var(--accent);
+
+    color: var(--paper);
+
+    font-family: 'Fraunces', serif;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+  }
+
+  .next-btn:active {
+    transform: scale(0.98);
+  }
+
+  .hint-row {
+    text-align: center;
+
+    font-size: 12px;
+
+    color: var(--ink-soft);
+
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* =========================
+     CARDS SETUP / QUIZ
+  ========================= */
+
+  .cards-setup {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .setup-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    padding: 9px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+
+  .chip.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+
+  .chip .cname {
+    font-family: 'Fraunces', serif;
+    font-size: 12.5px;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .start-btn:disabled { opacity: 0.45; }
+  .start-btn:active { transform: scale(0.98); }
+
+  .quiz-screen {
+    display: none;
+    min-height: calc(100vh - 74px);
+  }
+
+  .quiz-content {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 25px 20px 50px;
+  }
+
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .score-val { color: var(--accent); font-weight: 700; }
+
+  .q-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 26px -14px var(--shadow);
+  }
+
+  .q-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  .q-text { font-size: 18px; font-weight: 600; line-height: 1.4; }
+  .q-text .qcode { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+
+  .options { display: flex; flex-direction: column; gap: 9px; }
+
+  .opt-btn {
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 11px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    line-height: 1.35;
+    cursor: pointer;
+  }
+
+  .opt-btn .oc {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  .opt-btn.correct { background: rgba(62,122,82,0.16); border-color: #3E7A52; }
+  .opt-btn.wrong { background: rgba(165,71,58,0.16); border-color: #A5473A; }
+  .opt-btn:disabled { cursor: default; }
+  .next-q-wrap { margin-top: 16px; display: none; }
+  .next-q-wrap.show { display: block; }
+
+  /* =========================
+     ACCOUNT PLAN SCREEN
+  ========================= */
+
+  #planScreen {
+    display: none;
+
+    min-height: calc(100vh - 74px);
+  }
+
+  .plan-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px 20px 50px;
+  }
+
+  .plan-title {
+    margin: 0 0 20px;
+
+    font-size: 24px;
+    font-weight: 600;
+
+    text-align: center;
+  }
+
+  .plan-search {
+    position: relative;
+    margin: 0 0 24px;
+  }
+
+  .plan-search svg {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 17px;
+    height: 17px;
+
+    color: var(--ink-soft);
+  }
+
+  #planSearch {
+    width: 100%;
+
+    padding: 12px 14px 12px 38px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--line);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 13px;
+  }
+
+  #planSearch::placeholder {
+    color: var(--ink-soft);
+  }
+
+  .plan-search-results {
+    display: none;
+    margin-bottom: 24px;
+  }
+
+  .plan-search-results.active {
+    display: block;
+  }
+
+  .plan-search-result {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: baseline;
+
+    padding: 11px 10px;
+
+    margin-bottom: 5px;
+
+    border-radius: 9px;
+
+    background: var(--paper);
+
+    border: 1px solid var(--line);
+
+    cursor: pointer;
+  }
+
+  .plan-search-result:hover,
+  .plan-search-result:active {
+    background: var(--brass-soft);
+  }
+
+  .plan-search-result .result-code {
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 12.5px;
+
+    font-weight: 700;
+
+    color: var(--accent);
+
+    flex-shrink: 0;
+  }
+
+  .plan-search-result .result-name {
+    font-size: 13.5px;
+
+    line-height: 1.35;
+
+    color: var(--ink);
+  }
+
+  .search-empty {
+    padding: 18px 10px;
+
+    text-align: center;
+
+    color: var(--ink-soft);
+
+    font-size: 13px;
+  }
+
+  .plan-section {
+    margin-bottom: 12px;
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    background: var(--paper);
+
+    overflow: hidden;
+  }
+
+  .plan-section-head {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 14px 15px;
+
+    background: none;
+    border: none;
+
+    color: var(--ink);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font-family: 'Fraunces', serif;
+  }
+
+  .plan-section-number {
+    font-family: 'JetBrains Mono', monospace;
+
+    color: var(--accent);
+
+    font-weight: 700;
+
+    font-size: 13px;
+
+    flex-shrink: 0;
+  }
+
+  .plan-section-name {
+    flex: 1;
+
+    font-size: 15px;
+
+    font-weight: 600;
+  }
+
+  .plan-section-count {
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 11px;
+
+    color: var(--ink-soft);
+  }
+
+  .plan-chevron {
+    width: 15px;
+    height: 15px;
+
+    color: var(--ink-soft);
+
+    transition: transform 0.25s ease;
+
+    flex-shrink: 0;
+  }
+
+  .plan-section.open .plan-chevron {
+    transform: rotate(90deg);
+  }
+
+  .plan-list {
+    display: none;
+
+    padding: 0 15px 12px;
+  }
+
+  .plan-section.open .plan-list {
+    display: block;
+  }
+
+  .acc-item {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: baseline;
+
+    padding: 8px 5px;
+
+    cursor: pointer;
+
+    border-radius: 7px;
+  }
+
+  .acc-item:hover,
+  .acc-item:active {
+    background: var(--brass-soft);
+  }
+
+  .acc-item .ac {
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 12.5px;
+
+    font-weight: 700;
+
+    color: var(--accent);
+
+    flex-shrink: 0;
+
+    width: 42px;
+  }
+
+  .acc-item .an {
+    font-size: 13.5px;
+
+    line-height: 1.35;
+
+    color: var(--ink);
+  }
+
+  mark {
+    background: var(--brass-soft);
+
+    color: inherit;
+
+    border-radius: 3px;
+
+    padding: 0 1px;
+  }
+
+  /* =========================
+     DRAWER
+  ========================= */
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(10,12,9,0.45);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: opacity 0.3s ease;
+
+    z-index: 30;
+  }
+
+  .overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawer {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: min(360px, 88vw);
+
+    background: var(--bg);
+
+    border-right: 1px solid var(--line);
+
+    transform: translateX(-100%);
+
+    transition: transform 0.35s cubic-bezier(.3,.1,.2,1);
+
+    z-index: 31;
+
+    display: flex;
+    flex-direction: column;
+
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .drawer.open {
+    transform: translateX(0);
+  }
+
+  .drawer-head {
+    padding: 16px 16px 12px;
+
+    border-bottom: 1px solid var(--line);
+
+    flex-shrink: 0;
+  }
+
+  .drawer-head-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 0;
+  }
+
+  .drawer-head-row h2 {
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.01em;
+  }
+
+  .close-btn {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--line);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+  }
+
+  /* =========================
+     SEARCH
+  ========================= */
+
+  .search-title {
+    display: none;
+  }
+
+  .search-wrap {
+    display: block;
+    position: relative;
+    padding: 0 16px 10px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 27px;
+    top: 50%;
+    transform: translateY(-55%);
+    width: 16px;
+    height: 16px;
+    color: var(--ink-soft);
+    pointer-events: none;
+  }
+
+  #drawerSearch {
+    width: 100%;
+    padding: 10px 12px 10px 36px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  #drawerSearch::placeholder {
+    color: var(--ink-soft);
+  }
+
+  .drawer-body {
+    overflow-y: auto;
+
+    padding: 6px 0 20px;
+
+    flex: 1;
+  }
+
+  /* =========================
+     MENU SECTIONS
+  ========================= */
+
+  .menu-section {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .menu-section-head {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding: 14px 16px;
+
+    background: none;
+
+    border: none;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    color: var(--ink);
+
+    font-family: 'Fraunces', serif;
+  }
+
+  .menu-section-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    flex: 1;
+  }
+
+  .menu-section-number {
+    font-family: 'JetBrains Mono', monospace;
+
+    color: var(--accent);
+
+    font-weight: 700;
+
+    font-size: 13px;
+  }
+
+  .menu-section-name {
+    font-size: 15px;
+
+    font-weight: 600;
+  }
+
+  .menu-chevron {
+    width: 14px;
+    height: 14px;
+
+    transition: transform 0.25s ease;
+
+    color: var(--ink-soft);
+
+    flex-shrink: 0;
+  }
+
+  .menu-section.open .menu-chevron {
+    transform: rotate(90deg);
+  }
+
+  .submenu {
+    display: none;
+
+    padding: 0 16px 12px;
+  }
+
+  .menu-section.open .submenu {
+    display: block;
+  }
+
+  .submenu-item {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 10px;
+
+    margin-bottom: 5px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--line);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-family: 'Fraunces', serif;
+  }
+
+  .submenu-item:active {
+    transform: scale(0.99);
+  }
+
+  .submenu-icon {
+    width: 18px;
+    height: 18px;
+
+    color: var(--accent);
+
+    flex-shrink: 0;
+  }
+
+  .submenu-text {
+    flex: 1;
+
+    font-size: 13.5px;
+
+    line-height: 1.3;
+
+    font-weight: 500;
+  }
+
+  .submenu-arrow {
+    width: 14px;
+    height: 14px;
+
+    color: var(--ink-soft);
+
+    flex-shrink: 0;
+  }
+
+  .no-results {
+    padding: 30px 20px;
+
+    text-align: center;
+
+    color: var(--ink-soft);
+
+    font-size: 13.5px;
+  }
+
+  /* =========================
+     BACK BUTTON
+  ========================= */
+
+  .screen-back {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 8px 11px;
+
+    margin-bottom: 18px;
+
+    border-radius: 9px;
+
+    border: 1px solid var(--line);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 11px;
+
+    cursor: pointer;
+  }
+
+  .screen-back svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (orientation: landscape) {
+    main {
+  margin-left: min(360px, 32vw);
+  width: calc(100% - min(360px, 32vw));
+}
+
+    .topbar {
+      display: none;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer {
+      width: min(360px, 32vw);
+      transform: translateX(0);
+      transition: none;
+      z-index: 19;
+    }
+
+    .drawer-head {
+      padding-top: calc(28px + env(safe-area-inset-top, 0px));
+      border-bottom: none;
+      position: relative;
+    }
+
+    .drawer-head::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: auto;
+      width: 100vw;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .close-btn {
+      display: none;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .code {
+      font-size: 66px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .plan-content {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+  .topbar {
+  border-bottom: 1px solid var(--line) !important;
+  }
+body.logged-out .topbar,
+body.logged-out #emptyScreen,
+body.logged-out #cardsScreen,
+body.logged-out #quizScreen,
+body.logged-out #planScreen,
+body.logged-out .drawer,
+body.logged-out .overlay {
+  display: none !important;
+}
+.user-info-logo{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:8px;
+  line-height:0.82;
+  user-select:none;
+  transform:translateY(-20px);
+}
+
+.user-info-logo-word{
+  font-family:'Pacifico',cursive;
+  font-size:clamp(32px,7vw,48px);
+  font-weight:400;
+  letter-spacing:0.01em;
+  -webkit-text-stroke:2px #11140F;
+  paint-order:stroke fill;
+  text-shadow:0 2px 3px rgba(20,24,18,0.22);
+}
+
+.user-info-logo-top{
+  color:#D8D0BA;
+}
+
+.user-info-logo-bottom{
+  color:#244635;
+}
+</style>
+</head>
+
+<body>
+  <div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-word login-logo-top">Твой</div>
+      <div class="login-logo-word login-logo-bottom">Учет</div>
+    </div>
+
+    <p class="login-title">Ключ доступа</p>
+    <p class="login-sub">Введите ключ, чтобы войти в приложение</p>
+
+    <input
+      type="password"
+      id="accessKeyInput"
+      class="login-input"
+      placeholder="••••••••"
+      autocomplete="off"
+    >
+
+    <p class="login-error" id="loginError"></p>
+
+    <button class="login-btn" id="loginBtn">
+      Войти
+    </button>
+  </div>
+</div>
+<div class="login-screen" id="userInfoScreen" style="display:none;">
+  <div class="login-card">
+    <div class="user-info-logo" id="userInfoLogo_58342">
+  <div class="user-info-logo-word user-info-logo-top">Твой</div>
+  <div class="user-info-logo-word user-info-logo-bottom">Учет</div>
+</div>
+      <p class="login-title">Укажите имя и номер телефона</p>
+        <input type="text" id="userNameInput" class="login-input" placeholder="Ваше имя" autocomplete="off" style="text-align:left;letter-spacing:normal;">
+        <input type="tel" id="userPhoneInput" class="login-input" placeholder="Номер телефона" autocomplete="off" style="text-align:left;letter-spacing:normal;">
+      <p class="login-error" id="userInfoError"></p>
+     <button class="login-btn" id="userInfoBtn">Продолжить</button>
+  </div>
+</div>
+
+<!-- =========================
+     TOP BAR
+========================= -->
+
+<div class="topbar">
+
+  <button
+    class="menu-btn"
+    id="openDrawer"
+    aria-label="Открыть меню"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+    >
+      <line x1="4" y1="7" x2="20" y2="7"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="17" x2="14" y2="17"/>
+    </svg>
+  </button>
+
+  <div class="topbar-space"></div>
+
+</div>
+
+
+<!-- =========================
+     EMPTY START SCREEN
+========================= -->
+
+<main id="emptyScreen">
+
+  <div class="empty-screen">
+
+    <div class="app-logo" aria-label="Твой Учет">
+      <div class="app-logo-word app-logo-top">Твой</div>
+      <div class="app-logo-word app-logo-bottom">Учет</div>
+    </div>
+
+    <div class="empty-screen-content">
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- =========================
+     CARDS SCREEN
+========================= -->
+
+<main id="cardsScreen">
+
+  <div class="cards-main">
+
+    <button
+      class="screen-back"
+      id="cardsBack"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+
+      Назад
+    </button>
+
+    <div id="cardsSetup" class="cards-setup">
+
+      <h2 class="setup-title">Раздел для карточек</h2>
+
+      <div class="chip-row" id="cardsSectionChips"></div>
+
+      <button class="start-btn" id="cardsStart">Начать игру</button>
+
+    </div>
+
+    <div id="cardsGameArea" style="display:none;width:100%;align-items:center;flex-direction:column;">
+
+    <div class="progress-row">
+
+      <span id="secLabel" class="section-tag">
+        Раздел 1
+      </span>
+
+      <span id="deckPos">
+        1 / 190
+      </span>
+
+    </div>
+
+    <div class="stage">
+
+      <div class="card" id="card">
+
+        <div class="face face-front">
+
+          <div
+            class="code"
+            id="frontCode"
+          >
+            1010
+          </div>
+
+          <div class="code-hint">
+            нажмите, чтобы открыть
+          </div>
+
+        </div>
+
+        <div class="face face-back">
+
+          <div
+            class="back-eyebrow"
+            id="backCode"
+          >
+            1010
+          </div>
+
+          <div
+            class="back-name"
+            id="backName"
+          >
+            —
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button
+        class="next-btn"
+        id="nextBtn"
+      >
+        Следующая карточка →
+      </button>
+
+      <div class="hint-row">
+        Карточки перемешаны · колода обновится по кругу
+      </div>
+
+    </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- =========================
+     TEST SCREEN
+========================= -->
+
+<main id="quizScreen" class="quiz-screen">
+
+  <div class="quiz-content">
+
+    <button class="screen-back" id="quizBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Назад
+    </button>
+
+    <div id="quizSetupArea">
+      <h2 class="setup-title">Сложность</h2>
+      <div class="chip-row" id="quizDiffChips">
+        <button class="chip" data-diff="3">Лёгкий · 3</button>
+        <button class="chip" data-diff="5">Средний · 5</button>
+        <button class="chip" data-diff="10">Сложный · 10</button>
+      </div>
+      <h2 class="setup-title">Раздел</h2>
+      <div class="chip-row" id="quizSectionChips"></div>
+      <button class="start-btn" id="quizStart" disabled>Начать тест</button>
+    </div>
+
+    <div id="quizGameArea" style="display:none;">
+      <div class="score-row"><span id="qSecLabel">—</span><span>Верно: <span class="score-val" id="qScore">0</span></span></div>
+      <div class="q-card">
+        <div class="q-eyebrow" id="qKind">Вопрос</div>
+        <div class="q-text" id="qText">—</div>
+      </div>
+      <div class="options" id="qOptions"></div>
+      <div class="next-q-wrap" id="nextQWrap"><button class="next-btn" id="nextQBtn">Следующий вопрос →</button></div>
+    </div>
+
+    <div id="quizResultArea" style="display:none;">
+      <div class="q-card" style="text-align:center;">
+        <div class="q-eyebrow">Тест завершён</div>
+        <div class="code" style="font-size:44px;color:var(--accent);" id="resultScore">0 / 15</div>
+        <p class="hint-row" id="resultNote" style="margin-top:10px;">результат</p>
+      </div>
+      <button class="start-btn" id="resultNewTest">Новый тест</button>
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- =========================
+     FULL ACCOUNT PLAN SCREEN
+========================= -->
+
+<main id="planScreen">
+
+  <div class="plan-content">
+
+    <button
+      class="screen-back"
+      id="planBack"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+
+      Назад
+    </button>
+
+    <h1 class="plan-title">
+      Типовой план счетов РК
+    </h1>
+
+    <div class="plan-search">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <circle cx="11" cy="11" r="7"/>
+        <line
+          x1="21"
+          y1="21"
+          x2="16.65"
+          y2="16.65"
+        />
+      </svg>
+
+      <input
+        id="planSearch"
+        type="text"
+        placeholder="Поиск по ТПС"
+        autocomplete="off"
+      >
+
+    </div>
+
+    <div
+      id="planSearchResults"
+      class="plan-search-results"
+    ></div>
+
+    <div id="planBody"></div>
+
+  </div>
+
+</main>
+
+
+<!-- =========================
+     DRAWER
+========================= -->
+
+<div
+  class="overlay"
+  id="overlay"
+></div>
+
+<div
+  class="drawer"
+  id="drawer"
+>
+
+  <div class="drawer-head">
+
+    <div class="drawer-head-row">
+
+      <h2>
+        ТвойУчет
+      </h2>
+
+      <button
+        class="close-btn"
+        id="closeDrawer"
+        aria-label="Закрыть"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="5" y1="5" x2="19" y2="19"/>
+          <line x1="19" y1="5" x2="5" y2="19"/>
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+  <div
+    class="drawer-body" 
+    id="drawerBody"
+  ></div>
+
+</div>
+
+
+<script>
+const ACCESS_KEY = "TU-7K4M-X9Q2";
+
+async function attemptLogin() {
+  const key = accessKeyInput.value.trim();
+
+  loginError.textContent = '';
+
+  if (!key) {
+    loginError.textContent = 'Введите ключ доступа';
+    return;
+  }
+
+  if (key === ACCESS_KEY) {
+    afterKeyAccepted();
+  } else {
+    loginError.textContent = 'Неверный ключ доступа';
+    accessKeyInput.value = '';
+    accessKeyInput.focus();
+  }
+}
+
+document.body.classList.add('logged-out');
+
+const loginScreen = document.getElementById('loginScreen');
+const userInfoScreen = document.getElementById('userInfoScreen');
+const accessKeyInput = document.getElementById('accessKeyInput');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+const userNameInput = document.getElementById('userNameInput');
+const userPhoneInput = document.getElementById('userPhoneInput');
+const userInfoBtn = document.getElementById('userInfoBtn');
+const userInfoError = document.getElementById('userInfoError');
+
+function showUserInfoScreen(){
+  loginScreen.style.display = 'none';
+  userInfoScreen.style.display = 'flex';
+  setTimeout(() => userNameInput.focus(), 50);
+}
+
+function showApp(){
+  loginScreen.style.display = 'none';
+  userInfoScreen.style.display = 'none';
+  document.body.classList.remove('logged-out');
+  localStorage.setItem('tps_demo_activated', '1');
+}
+
+function afterKeyAccepted(){
+   showApp();
+}
+
+userInfoBtn.addEventListener('click', () => {
+  const name = userNameInput.value.trim();
+  const phone = userPhoneInput.value.trim();
+
+  userInfoError.textContent = '';
+
+  if (!name || !phone){
+    userInfoError.textContent = 'Заполните имя и номер телефона';
+    return;
+  }
+
+  localStorage.setItem('tps_user_name', name);
+  localStorage.setItem('tps_user_phone', phone);
+
+  showApp();
+});
+
+
+loginBtn.addEventListener('click', attemptLogin);
+
+accessKeyInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter'){
+    attemptLogin();
+  }
+});
+
+userPhoneInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter'){
+    userInfoBtn.click();
+  }
+});
+
+if (localStorage.getItem('tps_demo_activated') === '1'){
+  showApp();
+}
+
+/* =========================================================
+   ДАННЫЕ ТИПОВОГО ПЛАНА СЧЕТОВ
+========================================================= */
+
+const SECTIONS = {
+
+  1: "Краткосрочные активы",
+  2: "Долгосрочные активы",
+  3: "Краткосрочные обязательства",
+  4: "Долгосрочные обязательства",
+  5: "Капитал и резервы",
+  6: "Доходы",
+  7: "Расходы",
+  8: "Счета производственного учёта"
+
+};
+
+
+const RAW = [
+
+["1010","Денежные средства в кассе"],
+["1020","Денежные средства в пути"],
+["1030","Денежные средства на текущих банковских счетах"],
+["1040","Денежные средства на корреспондентских счетах"],
+["1050","Денежные средства на сберегательных счетах"],
+["1060","Денежные средства, ограниченные в использовании"],
+["1070","Учет электронных денежных средств"],
+["1080","Прочие денежные средства"],
+["1090","Оценочный резерв под убытки от обесценения денежных средств"],
+
+["1110","Краткосрочные финансовые активы по амортизированной стоимости"],
+["1120","Краткосрочные финансовые активы по справедливой стоимости через прочий совокупный доход"],
+["1130","Краткосрочные финансовые активы по справедливой стоимости через прибыль или убыток"],
+["1140","Производные финансовые инструменты"],
+["1150","Краткосрочные вознаграждения к получению"],
+["1160","Прочие краткосрочные финансовые активы"],
+["1170","Резерв под убытки от обесценения краткосрочных финансовых активов"],
+
+["1210","Краткосрочная дебиторская задолженность покупателей и заказчиков"],
+["1220","Краткосрочная дебиторская задолженность дочерних организаций"],
+["1230","Краткосрочная дебиторская задолженность ассоциированных и совместных организаций"],
+["1240","Краткосрочная дебиторская задолженность филиалов и структурных подразделений"],
+["1250","Краткосрочная дебиторская задолженность работников"],
+["1260","Краткосрочная дебиторская задолженность по аренде"],
+["1270","Прочая краткосрочная дебиторская задолженность"],
+["1280","Резерв под убытки от обесценения краткосрочной дебиторской задолженности"],
+
+["1310","Сырьё и материалы"],
+["1320","Готовая продукция"],
+["1330","Товары"],
+["1340","Незавершённое производство"],
+["1350","Прочие запасы"],
+["1360","Резерв под убытки от обесценения запасов"],
+["1370","Актив по праву на возврат запасов"],
+
+["1410","Корпоративный подоходный налог (актив)"],
+["1420","Налог на добавленную стоимость (актив)"],
+["1430","Прочие налоги и другие обязательные платежи в бюджет (актив)"],
+
+["1510","Долгосрочные активы, предназначенные для продажи"],
+["1520","Группы на выбытие, предназначенные для продажи"],
+["1530","Резерв под убытки от обесценения долгосрочных активов, предназначенных для продажи"],
+
+["1610","Растения (краткосрочные биоактивы)"],
+["1620","Животные (краткосрочные биоактивы)"],
+["1630","Резерв под убытки от обесценения краткосрочных биологических активов"],
+
+["1710","Краткосрочные авансы выданные"],
+["1720","Расходы будущих периодов (краткосрочные)"],
+["1730","Краткосрочные активы по договорам"],
+["1740","Резерв под убытки от обесценения краткосрочных активов по договорам"],
+["1750","Прочие краткосрочные активы"],
+
+["2010","Долгосрочные финансовые активы по амортизированной стоимости"],
+["2020","Долгосрочные финансовые активы по справедливой стоимости через прочий совокупный доход"],
+["2030","Долгосрочные финансовые активы по справедливой стоимости через прибыль или убыток"],
+["2040","Производные финансовые инструменты (долгосрочные)"],
+["2050","Долгосрочные вознаграждения к получению"],
+["2060","Долевые инструменты"],
+["2070","Прочие долгосрочные финансовые активы"],
+["2080","Резерв под убытки от обесценения долгосрочных финансовых активов"],
+
+["2110","Долгосрочная задолженность покупателей и заказчиков"],
+["2120","Долгосрочная дебиторская задолженность дочерних организаций"],
+["2130","Долгосрочная дебиторская задолженность ассоциированных и совместных организаций"],
+["2140","Долгосрочная дебиторская задолженность филиалам и структурным подразделениям"],
+["2150","Долгосрочная дебиторская задолженность работников"],
+["2160","Долгосрочная дебиторская задолженность по аренде"],
+["2170","Прочая долгосрочная дебиторская задолженность"],
+["2180","Резерв под убытки от обесценения долгосрочной дебиторской задолженности"],
+
+["2210","Инвестиции, учитываемые методом долевого участия"],
+["2220","Инвестиции, учитываемые по первоначальной стоимости"],
+["2230","Резерв под убытки от обесценения инвестиций"],
+
+["2310","Инвестиционное имущество"],
+["2320","Амортизация инвестиционного имущества"],
+["2330","Резерв под убытки от обесценения инвестиционного имущества"],
+
+["2410","Основные средства"],
+["2420","Амортизация основных средств"],
+["2430","Резерв под убытки от обесценения основных средств"],
+["2440","Право пользования активом (ОС)"],
+["2450","Амортизация права пользования активом (ОС)"],
+["2460","Резерв под убытки от обесценения права пользования активом (ОС)"],
+
+["2510","Растения (долгосрочные биоактивы)"],
+["2520","Животные (долгосрочные биоактивы)"],
+["2530","Амортизация биологических активов"],
+["2540","Резерв под убытки от обесценения биологических активов"],
+
+["2610","Разведочные и оценочные активы"],
+["2620","Амортизация разведочных и оценочных активов"],
+["2630","Резерв под убытки от обесценения разведочных и оценочных активов"],
+
+["2710","Гудвилл"],
+["2720","Обесценение гудвилла"],
+["2730","Прочие нематериальные активы"],
+["2740","Амортизация прочих нематериальных активов"],
+["2750","Резерв под убытки от обесценения прочих нематериальных активов"],
+["2760","Право пользования активом (НМА)"],
+["2770","Амортизация права пользования активом (НМА)"],
+["2780","Резерв под убытки от обесценения права пользования активом (НМА)"],
+
+["2810","Отложенные налоговые активы по КПН"],
+
+["2910","Долгосрочные авансы выданные"],
+["2920","Расходы будущих периодов (долгосрочные)"],
+["2930","Незавершённое строительство"],
+["2940","Долгосрочные активы по договорам"],
+["2950","Резерв под убытки от обесценения долгосрочных активов по договорам"],
+["2960","Затраты по договорам"],
+["2970","Амортизация затрат по договорам"],
+["2980","Резерв под убытки от обесценения затрат по договорам"],
+["2990","Прочие долгосрочные активы"],
+
+["3010","Краткосрочные финансовые обязательства по амортизированной стоимости"],
+["3020","Краткосрочные финансовые обязательства по справедливой стоимости через прибыль или убыток"],
+["3030","Производные финансовые инструменты (обязательства)"],
+["3040","Краткосрочная задолженность по дивидендам и доходам участников"],
+["3050","Краткосрочные вознаграждения к выплате"],
+["3060","Текущая часть долгосрочных обязательств по амортизированной стоимости"],
+["3070","Текущая часть долгосрочных обязательств по справедливой стоимости"],
+["3080","Прочие краткосрочные финансовые обязательства"],
+
+["3110","Корпоративный подоходный налог к уплате"],
+["3120","Индивидуальный подоходный налог"],
+["3130","Налог на добавленную стоимость (обязательство)"],
+["3140","Акцизы"],
+["3150","Социальный налог"],
+["3160","Земельный налог"],
+["3170","Налог на транспортные средства"],
+["3180","Налог на имущество"],
+["3190","Прочие налоги"],
+
+["3210","Обязательства по социальному страхованию"],
+["3220","Обязательства по пенсионным отчислениям"],
+["3230","Прочие обязательства по другим обязательным платежам"],
+["3240","Прочие обязательства по добровольным платежам"],
+["3250","Обязательства по обязательным пенсионным взносам работодателя"],
+
+["3310","Краткосрочная задолженность поставщикам и подрядчикам"],
+["3320","Краткосрочная задолженность дочерним организациям"],
+["3330","Краткосрочная задолженность ассоциированным и совместным организациям"],
+["3340","Краткосрочная задолженность филиалам и структурным подразделениям"],
+["3350","Краткосрочная задолженность по оплате труда"],
+["3360","Краткосрочная задолженность по аренде"],
+["3370","Текущая часть долгосрочной кредиторской задолженности"],
+["3380","Прочая краткосрочная кредиторская задолженность"],
+
+["3410","Краткосрочные гарантийные обязательства"],
+["3420","Краткосрочные обязательства по юридическим претензиям"],
+["3430","Краткосрочные оценочные обязательства по вознаграждениям работникам"],
+["3440","Прочие краткосрочные оценочные обязательства"],
+
+["3510","Краткосрочные авансы полученные"],
+["3520","Доходы будущих периодов (краткосрочные)"],
+["3530","Обязательства группы на выбытие, предназначенной для продажи"],
+["3540","Краткосрочные обязательства по договорам"],
+["3550","Долговой компонент комбинированного краткосрочного финансового инструмента"],
+["3560","Прочие краткосрочные обязательства"],
+
+["4010","Долгосрочные финансовые обязательства по амортизированной стоимости"],
+["4020","Долгосрочные финансовые обязательства по справедливой стоимости через прибыль или убыток"],
+["4030","Производные финансовые инструменты (долгосрочные обязательства)"],
+["4040","Долгосрочная задолженность по дивидендам и доходам участников"],
+["4050","Долгосрочные вознаграждения к выплате"],
+["4060","Прочие долгосрочные финансовые обязательства"],
+
+["4110","Долгосрочная задолженность поставщикам и подрядчикам"],
+["4120","Долгосрочная задолженность дочерним организациям"],
+["4130","Долгосрочная задолженность ассоциированным и совместным организациям"],
+["4140","Долгосрочная задолженность филиалам и структурным подразделениям"],
+["4150","Долгосрочная задолженность по аренде"],
+["4160","Прочая долгосрочная кредиторская задолженность"],
+
+["4210","Долгосрочные гарантийные обязательства"],
+["4220","Долгосрочные оценочные обязательства по юридическим претензиям"],
+["4230","Долгосрочные оценочные обязательства по вознаграждениям работникам"],
+["4240","Прочие долгосрочные оценочные обязательства"],
+
+["4310","Отложенные налоговые обязательства по КПН"],
+
+["4410","Долгосрочные авансы полученные"],
+["4420","Доходы будущих периодов (долгосрочные)"],
+["4430","Долгосрочные обязательства по договорам"],
+["4440","Долговой компонент комбинированного долгосрочного инструмента"],
+["4450","Прочие долгосрочные обязательства"],
+
+["5010","Привилегированные акции"],
+["5020","Простые акции"],
+["5030","Вклады и паи"],
+["5110","Неоплаченный капитал"],
+["5210","Выкупленные собственные долевые инструменты"],
+["5310","Эмиссионный доход"],
+["5410","Доп. оплаченный капитал по безвозмездным операциям с основной организацией"],
+["5420","Доп. оплаченный капитал по прочим операциям"],
+["5510","Резервный капитал, установленный учредительными документами"],
+["5520","Резерв на переоценку основных средств"],
+["5530","Резерв на переоценку нематериальных активов"],
+["5540","Резерв на переоценку финансовых активов через ПСД"],
+["5550","Резерв под убытки по финансовым активам"],
+["5560","Резерв на пересчёт иностранной валюты по зарубежной деятельности"],
+["5570","Прочие резервы"],
+["5610","Нераспределённая прибыль (непокрытый убыток) отчётного года"],
+["5620","Нераспределённая прибыль (непокрытый убыток) предыдущих лет"],
+["5710","Итоговая прибыль (итоговый убыток)"],
+
+["6010","Доход от реализации продукции и оказания услуг"],
+["6020","Возврат проданной продукции"],
+["6030","Скидки с цены и продаж"],
+["6110","Доходы по вознаграждениям"],
+["6120","Доходы по дивидендам"],
+["6130","Доходы от финансовой аренды"],
+["6140","Доходы от операций с инвестициями в недвижимость"],
+["6150","Доходы от изменения справедливой стоимости финансовых инструментов"],
+["6160","Прочие доходы от финансирования"],
+["6210","Доходы от выбытия активов"],
+["6220","Доходы от безвозмездно полученных активов"],
+["6230","Доходы от государственных субсидий"],
+["6240","Доходы от восстановления убытка от обесценения по нефинансовым активам"],
+["6250","Доходы от курсовой разницы"],
+["6260","Доходы от операционной аренды"],
+["6270","Доходы от изменения справедливой стоимости биологических активов"],
+["6280","Доходы от восстановления убытка от обесценения по финансовым активам"],
+["6290","Прочие доходы"],
+["6310","Доходы, связанные с прекращаемой деятельностью"],
+["6410","Доля прибыли ассоциированных организаций"],
+["6420","Доля прибыли совместных организаций"],
+
+["7010","Себестоимость реализованной продукции и оказанных услуг"],
+["7110","Расходы по реализации продукции и оказанию услуг"],
+["7210","Административные расходы"],
+["7310","Расходы по вознаграждениям"],
+["7320","Расходы на выплату процентов по финансовой аренде"],
+["7330","Расходы от изменения справедливой стоимости финансовых инструментов"],
+["7340","Прочие расходы на финансирование"],
+["7410","Расходы по выбытию активов"],
+["7420","Расходы от обесценения нефинансовых активов"],
+["7430","Расходы по курсовой разнице"],
+["7440","Расходы по обесценению дебиторской задолженности"],
+["7450","Расходы по операционной аренде"],
+["7460","Расходы от изменения справедливой стоимости биологических активов"],
+["7470","Расходы от обесценения финансовых инструментов"],
+["7480","Прочие расходы"],
+["7510","Расходы, связанные с прекращаемой деятельностью"],
+["7610","Доля в убытке ассоциированных организаций"],
+["7620","Доля в убытке совместных организаций"],
+["7710","Расходы по корпоративному подоходному налогу"],
+
+["8110","Основное производство"],
+["8210","Полуфабрикаты собственного производства"],
+["8310","Вспомогательные производства"],
+["8410","Накладные расходы"]
+
+];
+
+
+const ACCOUNTS = RAW.map(([code, name]) => ({
+  code,
+  name,
+  section: parseInt(code[0], 10)
+}));
+
+function pool(section) {
+  return section === 0
+    ? ACCOUNTS
+    : ACCOUNTS.filter(a => a.section === section);
+}
+
+function secName(section) {
+  return section === 0
+    ? "Все разделы"
+    : "Раздел " + section + " · " + SECTIONS[section];
+}
+
+
+/* =========================================================
+   SCREEN MANAGEMENT
+========================================================= */
+
+const emptyScreen = document.getElementById('emptyScreen');
+const cardsScreen = document.getElementById('cardsScreen');
+const planScreen = document.getElementById('planScreen');
+const quizScreen = document.getElementById('quizScreen');
+
+
+function hideAllScreens() {
+
+  emptyScreen.style.display = 'none';
+  cardsScreen.style.display = 'none';
+  planScreen.style.display = 'none';
+  quizScreen.style.display = 'none';
+
+}
+
+
+function showEmptyScreen() {
+
+  hideAllScreens();
+
+  emptyScreen.style.display = 'block';
+
+}
+
+
+function showCardsScreen() {
+
+  hideAllScreens();
+
+  cardsScreen.style.display = 'block';
+
+  closeDrawerFn();
+
+  if (!deck.length) {
+    newDeck();
+  }
+
+  document.getElementById('cardsSetup').style.display = 'none';
+  document.getElementById('cardsGameArea').style.display = 'flex';
+
+  renderCard();
+
+}
+
+function showCardsSetup() {
+
+  hideAllScreens();
+
+  cardsScreen.style.display = 'block';
+
+  closeDrawerFn();
+
+  document.getElementById('cardsSetup').style.display = 'block';
+  document.getElementById('cardsGameArea').style.display = 'none';
+
+}
+
+function showQuizScreen() {
+
+  hideAllScreens();
+
+  quizScreen.style.display = 'block';
+
+  closeDrawerFn();
+
+  document.getElementById('quizSetupArea').style.display = 'block';
+  document.getElementById('quizGameArea').style.display = 'none';
+  document.getElementById('quizResultArea').style.display = 'none';
+
+}
+
+
+function showPlanScreen() {
+
+  hideAllScreens();
+
+  planScreen.style.display = 'block';
+
+  closeDrawerFn();
+
+  buildPlan();
+
+  const planSearch =
+    document.getElementById('planSearch');
+
+  planSearch.value = '';
+
+  renderPlanSearch('');
+
+}
+
+
+function buildSectionChips(container, onChange) {
+
+  container.innerHTML = '';
+
+  const opts = [0,1,2,3,4,5,6,7,8];
+  let selected = 0;
+
+  opts.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (s === 0 ? ' on' : '');
+    b.innerHTML = s === 0 ? '<span class="cname">Все разделы</span>' : '<span class="cname">' + s + '</span>';
+    b.title = s === 0 ? 'Все разделы' : SECTIONS[s];
+    b.addEventListener('click', () => {
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+      b.classList.add('on');
+      selected = s;
+      onChange(selected);
+    });
+    container.appendChild(b);
+  });
+
+  return { get: () => selected };
+
+}
+
+/* =========================================================
+   CARDS SETUP / CARD GAME
+========================================================= */
+
+const cardsChips = buildSectionChips(
+  document.getElementById('cardsSectionChips'),
+  () => {}
+);
+
+document.getElementById('cardsStart').addEventListener('click', () => {
+  deck = shuffle(pool(cardsChips.get()));
+  pos = 0;
+  showCardsScreen();
+});
+
+/* =========================================================
+   CARD GAME
+========================================================= */
+
+let deck = [];
+let pos = 0;
+
+
+function shuffle(arr) {
+
+  const a = arr.slice();
+
+  for (let i = a.length - 1; i > 0; i--) {
+
+    const j =
+      Math.floor(Math.random() * (i + 1));
+
+    [a[i], a[j]] =
+      [a[j], a[i]];
+
+  }
+
+  return a;
+
+}
+
+
+function newDeck() {
+
+  deck = shuffle(ACCOUNTS);
+
+  pos = 0;
+
+}
+
+
+const cardEl =
+  document.getElementById('card');
+
+const frontCode =
+  document.getElementById('frontCode');
+
+const backCode =
+  document.getElementById('backCode');
+
+const backName =
+  document.getElementById('backName');
+
+const secLabel =
+  document.getElementById('secLabel');
+
+const deckPos =
+  document.getElementById('deckPos');
+
+
+function renderCard() {
+
+  const item = deck[pos];
+
+  if (!item) return;
+
+  cardEl.classList.remove('flipped');
+
+  frontCode.textContent =
+    item.code;
+
+  backCode.textContent =
+    item.code;
+
+  backName.textContent =
+    item.name;
+
+  secLabel.textContent =
+    'Раздел ' +
+    item.section +
+    ' · ' +
+    SECTIONS[item.section];
+
+  deckPos.textContent =
+    (pos + 1) +
+    ' / ' +
+    deck.length;
+
+}
+
+
+cardEl.addEventListener('click', () => {
+
+  cardEl.classList.toggle('flipped');
+
+});
+
+
+document
+  .getElementById('nextBtn')
+  .addEventListener('click', () => {
+
+    pos++;
+
+    if (pos >= deck.length) {
+      deck = shuffle(deck);
+      pos = 0;
+    }
+
+    renderCard();
+
+  });
+
+
+document
+  .getElementById('cardsBack')
+  .addEventListener('click', () => {
+
+    showEmptyScreen();
+
+  });
+
+
+/* =========================================================
+   DRAWER
+========================================================= */
+
+const drawer =
+  document.getElementById('drawer');
+
+const overlay =
+  document.getElementById('overlay');
+
+const drawerBody =
+  document.getElementById('drawerBody');
+
+
+function openDrawer() {
+
+  drawer.classList.add('open');
+
+  overlay.classList.add('open');
+
+}
+
+
+function closeDrawerFn() {
+
+  drawer.classList.remove('open');
+
+  overlay.classList.remove('open');
+
+}
+
+
+document
+  .getElementById('openDrawer')
+  .addEventListener('click', openDrawer);
+
+
+document
+  .getElementById('closeDrawer')
+  .addEventListener('click', closeDrawerFn);
+
+
+overlay.addEventListener(
+  'click',
+  closeDrawerFn
+);
+
+
+/* =========================================================
+   HTML SAFETY
+========================================================= */
+
+function escapeHtml(s) {
+
+  return String(s).replace(
+    /[&<>"']/g,
+
+    c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c])
+
+  );
+
+}
+
+
+/* =========================================================
+   SEARCH HIGHLIGHT
+========================================================= */
+
+function highlight(text, q) {
+
+  if (!q) {
+    return escapeHtml(text);
+  }
+
+  const idx =
+    text.toLowerCase()
+      .indexOf(q.toLowerCase());
+
+  if (idx === -1) {
+    return escapeHtml(text);
+  }
+
+  return (
+    escapeHtml(text.slice(0, idx)) +
+    '<mark>' +
+    escapeHtml(
+      text.slice(
+        idx,
+        idx + q.length
+      )
+    ) +
+    '</mark>' +
+    escapeHtml(
+      text.slice(idx + q.length)
+    )
+  );
+
+}
+
+
+/* =========================================================
+   MAIN MENU
+========================================================= */
+
+function buildMenu(query = '') {
+
+  drawerBody.innerHTML = '';
+
+  const searchWrap =
+    document.createElement('div');
+
+  searchWrap.className =
+    'search-wrap';
+
+  searchWrap.innerHTML = `
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <circle cx="11" cy="11" r="7"/>
+      <line
+        x1="21"
+        y1="21"
+        x2="16.65"
+        y2="16.65"
+      />
+    </svg>
+
+    <input
+      id="drawerSearch"
+      type="text"
+      placeholder="Поиск разделов"
+      autocomplete="off"
+      value="${escapeHtml(query)}"
+    >
+
+  `;
+
+  drawerBody.appendChild(searchWrap);
+
+  const searchInput =
+    searchWrap.querySelector('#drawerSearch');
+
+  searchInput.addEventListener(
+    'input',
+    event => {
+
+      buildMenu(event.target.value);
+
+      const newSearch =
+        document.getElementById('drawerSearch');
+
+      newSearch.focus();
+
+      newSearch.setSelectionRange(
+        newSearch.value.length,
+        newSearch.value.length
+      );
+
+    }
+  );
+
+  const section =
+    document.createElement('div');
+
+  section.className =
+    'menu-section';
+
+
+  const normalizedQuery =
+    query.trim().toLowerCase();
+
+  const sectionName =
+    'тпс';
+
+  const planName =
+    'типовой план счетов рк';
+
+  const cardsName =
+    'карточки по тпс';
+
+  const testName =
+    'тест';
+
+  const sectionMatches =
+    !normalizedQuery ||
+    sectionName.includes(normalizedQuery);
+
+  const planMatches =
+    !normalizedQuery ||
+    planName.includes(normalizedQuery);
+
+  const cardsMatches =
+    !normalizedQuery ||
+    cardsName.includes(normalizedQuery);
+
+  const testMatches =
+    !normalizedQuery ||
+    testName.includes(normalizedQuery);
+
+  if (
+    normalizedQuery &&
+    !sectionMatches &&
+    !planMatches &&
+    !cardsMatches &&
+    !testMatches
+  ) {
+
+    const noResults =
+      document.createElement('div');
+
+    noResults.className =
+      'no-results';
+
+    noResults.textContent =
+      'Ничего не найдено';
+
+    drawerBody.appendChild(noResults);
+
+    return;
+
+  }
+
+
+  const head =
+    document.createElement('button');
+
+  head.className =
+    'menu-section-head';
+
+
+  head.innerHTML = `
+
+    <span class="menu-section-left">
+
+      <span class="menu-section-number">
+        1
+      </span>
+
+      <span class="menu-section-name">
+        ТПС
+      </span>
+
+    </span>
+
+    <svg
+      class="menu-chevron"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 6 15 12 9 18"/>
+    </svg>
+
+  `;
+
+
+  const submenu =
+    document.createElement('div');
+
+  submenu.className =
+    'submenu';
+
+
+  /* =========================
+     ТИПОВОЙ ПЛАН СЧЕТОВ
+  ========================= */
+
+  const planItem =
+    document.createElement('button');
+
+  planItem.className =
+    'submenu-item';
+
+
+  planItem.innerHTML = `
+
+    <svg
+      class="submenu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 4.5h14a2 2 0 0 1 2 2V20H7a2 2 0 0 0-2 2z"/>
+      <path d="M5 4.5v17"/>
+      <path d="M9 8h8"/>
+      <path d="M9 12h8"/>
+      <path d="M9 16h5"/>
+    </svg>
+
+    <span class="submenu-text">
+      Типовой план счетов РК
+    </span>
+
+    <svg
+      class="submenu-arrow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 6 15 12 9 18"/>
+    </svg>
+
+  `;
+
+
+  planItem.addEventListener(
+    'click',
+    showPlanScreen
+  );
+
+
+  /* =========================
+     КАРТОЧКИ
+  ========================= */
+
+  const cardsItem =
+    document.createElement('button');
+
+  cardsItem.className =
+    'submenu-item';
+
+
+  cardsItem.innerHTML = `
+
+    <svg
+      class="submenu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+
+      <rect
+        x="5"
+        y="4"
+        width="14"
+        height="16"
+        rx="1.5"
+      />
+
+      <path d="M8 8h8"/>
+      <path d="M8 12h6"/>
+      <path d="M8 16h4"/>
+      <path d="M7 2.5h10"/>
+
+    </svg>
+
+    <span class="submenu-text">
+      Карточки по ТПС
+    </span>
+
+    <svg
+      class="submenu-arrow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 6 15 12 9 18"/>
+    </svg>
+
+  `;
+
+
+  cardsItem.addEventListener(
+    'click',
+    showCardsSetup
+  );
+
+
+  /* =========================
+     ТЕСТ
+  ========================= */
+
+  const testItem =
+    document.createElement('button');
+
+  testItem.className =
+    'submenu-item';
+
+  testItem.innerHTML = `
+    <svg
+      class="submenu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="8"/>
+      <path d="M8.5 12l2.2 2.2L15.8 9"/>
+    </svg>
+    <span class="submenu-text">Тест</span>
+    <svg
+      class="submenu-arrow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 6 15 12 9 18"/>
+    </svg>
+  `;
+
+  testItem.addEventListener(
+    'click',
+    showQuizScreen
+  );
+
+  if (planMatches) {
+    submenu.appendChild(planItem);
+  }
+
+  if (cardsMatches) {
+    submenu.appendChild(cardsItem);
+  }
+
+  if (testMatches) {
+    submenu.appendChild(testItem);
+  }
+
+
+  head.addEventListener(
+    'click',
+    () => {
+
+      section.classList.toggle('open');
+
+    }
+  );
+
+
+  section.appendChild(head);
+
+  section.appendChild(submenu);
+
+  drawerBody.appendChild(section);
+
+}
+
+
+/* =========================================================
+   QUIZ GAME
+========================================================= */
+
+let quizDiff = null;
+let quizSectionVal = 0;
+
+const quizChips = buildSectionChips(
+  document.getElementById('quizSectionChips'),
+  value => {
+    quizSectionVal = value;
+    checkQuizReady();
+  }
+);
+
+document.querySelectorAll('#quizDiffChips .chip').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#quizDiffChips .chip').forEach(c => c.classList.remove('on'));
+    b.classList.add('on');
+    quizDiff = parseInt(b.dataset.diff, 10);
+    checkQuizReady();
+  });
+});
+
+function checkQuizReady() {
+  document.getElementById('quizStart').disabled = !quizDiff;
+}
+
+function generateDistractors(correct, need) {
+  const exclude = new Set([correct.code]);
+  const result = [];
+  const sub = correct.code.slice(0, 2);
+
+  const tier1 = shuffle(ACCOUNTS.filter(a => a.code.slice(0, 2) === sub && !exclude.has(a.code)));
+  for (const a of tier1) {
+    if (result.length >= need) break;
+    result.push(a);
+    exclude.add(a.code);
+  }
+
+  if (result.length < need) {
+    const tier2 = shuffle(ACCOUNTS.filter(a => a.section === correct.section && !exclude.has(a.code)));
+    for (const a of tier2) {
+      if (result.length >= need) break;
+      result.push(a);
+      exclude.add(a.code);
+    }
+  }
+
+  if (result.length < need) {
+    const tier3 = shuffle(ACCOUNTS.filter(a => !exclude.has(a.code)));
+    for (const a of tier3) {
+      if (result.length >= need) break;
+      result.push(a);
+      exclude.add(a.code);
+    }
+  }
+
+  return result;
+}
+
+let quizPool = [];
+let quizQueue = [];
+let quizLimit = 15;
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+document.getElementById('quizStart').addEventListener('click', () => {
+  quizPool = pool(quizSectionVal);
+  quizLimit = quizSectionVal === 8 ? Math.min(4, quizPool.length) : Math.min(15, quizPool.length);
+  quizQueue = shuffle(quizPool).slice(0, quizLimit);
+  quizIndex = 0;
+  quizScore = 0;
+  document.getElementById('quizSetupArea').style.display = 'none';
+  document.getElementById('quizResultArea').style.display = 'none';
+  document.getElementById('quizGameArea').style.display = 'block';
+  nextQuestion();
+});
+
+function updateScore() {
+  document.getElementById('qScore').textContent = quizScore;
+  document.getElementById('qSecLabel').textContent = 'Вопрос ' + quizIndex + ' из ' + quizLimit;
+}
+
+function showQuizResult() {
+  document.getElementById('quizGameArea').style.display = 'none';
+  document.getElementById('quizResultArea').style.display = 'block';
+  document.getElementById('resultScore').textContent = quizScore + ' / ' + quizLimit;
+  document.getElementById('resultNote').textContent = secName(quizSectionVal) + ' · верных ответов: ' + quizScore + ' из ' + quizLimit;
+}
+
+document.getElementById('resultNewTest').addEventListener('click', () => {
+  quizDiff = null;
+  document.querySelectorAll('#quizDiffChips .chip').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('#quizSectionChips .chip').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('#quizSectionChips .chip')[0].classList.add('on');
+  quizSectionVal = 0;
+  checkQuizReady();
+  document.getElementById('quizResultArea').style.display = 'none';
+  document.getElementById('quizSetupArea').style.display = 'block';
+});
+
+document.getElementById('quizBack').addEventListener('click', () => {
+  showEmptyScreen();
+});
+
+function nextQuestion() {
+  if (quizIndex >= quizLimit) {
+    showQuizResult();
+    return;
+  }
+
+  quizAnswered = false;
+  document.getElementById('nextQWrap').classList.remove('show');
+
+  const correct = quizQueue[quizIndex];
+  quizIndex++;
+  const askCode = Math.random() < 0.5;
+  const distractors = generateDistractors(correct, quizDiff - 1);
+  const options = shuffle([correct, ...distractors]);
+
+  const qKind = document.getElementById('qKind');
+  const qText = document.getElementById('qText');
+
+  if (askCode) {
+    qKind.textContent = 'Определите счёт по названию';
+    qText.innerHTML = 'Какой номер у счёта «' + escapeHtml(correct.name) + '»?';
+  } else {
+    qKind.textContent = 'Определите название по номеру';
+    qText.innerHTML = 'Как называется счёт <span class="qcode">' + escapeHtml(correct.code) + '</span>?';
+  }
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+
+  options.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.dataset.code = opt.code;
+    b.innerHTML = askCode ? '<span class="oc">' + escapeHtml(opt.code) + '</span>' : escapeHtml(opt.name);
+    b.addEventListener('click', () => selectOption(b, opt, correct));
+    optWrap.appendChild(b);
+  });
+
+  updateScore();
+}
+
+function selectOption(btn, opt, correct) {
+  if (quizAnswered) return;
+
+  quizAnswered = true;
+  const isCorrect = opt.code === correct.code;
+  if (isCorrect) quizScore++;
+
+  document.querySelectorAll('#qOptions .opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.code === correct.code) b.classList.add('correct');
+  });
+
+  if (!isCorrect) btn.classList.add('wrong');
+  document.getElementById('nextQWrap').classList.add('show');
+  updateScore();
+}
+
+document.getElementById('nextQBtn').addEventListener('click', nextQuestion);
+
+
+/* =========================================================
+   FULL PLAN OF ACCOUNTS
+========================================================= */
+
+const planBody =
+  document.getElementById('planBody');
+
+const planSearchInput =
+  document.getElementById('planSearch');
+
+const planSearchResults =
+  document.getElementById(
+    'planSearchResults'
+  );
+
+
+function buildPlan() {
+
+  planBody.innerHTML = '';
+
+  Object.keys(SECTIONS)
+    .forEach(secNum => {
+
+      const secItems =
+        ACCOUNTS.filter(
+          account =>
+            account.section == secNum
+        );
+
+
+      const block =
+        document.createElement('div');
+
+      block.className =
+        'plan-section';
+
+
+      const head =
+        document.createElement('button');
+
+      head.className =
+        'plan-section-head';
+
+
+      head.innerHTML = `
+
+        <span class="plan-section-number">
+          ${secNum}
+        </span>
+
+        <span class="plan-section-name">
+          ${escapeHtml(
+            SECTIONS[secNum]
+          )}
+        </span>
+
+        <span class="plan-section-count">
+          ${secItems.length}
+        </span>
+
+        <svg
+          class="plan-chevron"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <polyline points="9 6 15 12 9 18"/>
+        </svg>
+
+      `;
+
+
+      const list =
+        document.createElement('div');
+
+      list.className =
+        'plan-list';
+
+
+      secItems.forEach(account => {
+
+        const item =
+          document.createElement('div');
+
+        item.className =
+          'acc-item';
+
+
+        item.innerHTML = `
+
+          <span class="ac">
+            ${escapeHtml(account.code)}
+          </span>
+
+          <span class="an">
+            ${escapeHtml(account.name)}
+          </span>
+
+        `;
+
+
+        item.addEventListener(
+          'click',
+          () => {
+
+            openAccountInCards(account);
+
+          }
+        );
+
+
+        list.appendChild(item);
+
+      });
+
+
+      head.addEventListener(
+        'click',
+        () => {
+
+          block.classList.toggle('open');
+
+        }
+      );
+
+
+      block.appendChild(head);
+
+      block.appendChild(list);
+
+      planBody.appendChild(block);
+
+    });
+
+}
+
+
+/* =========================================================
+   ПОИСК ПО ТПС
+========================================================= */
+
+function renderPlanSearch(query) {
+
+  const q =
+    query.trim().toLowerCase();
+
+
+  if (!q) {
+
+    planSearchResults.innerHTML = '';
+
+    planSearchResults.classList.remove(
+      'active'
+    );
+
+    return;
+
+  }
+
+
+  const results =
+    ACCOUNTS.filter(account => {
+
+      const code =
+        account.code.toLowerCase();
+
+      const name =
+        account.name.toLowerCase();
+
+      if (/^\d+$/.test(q)) {
+        return code.startsWith(q);
+      }
+
+      return name.includes(q);
+
+    });
+
+
+  planSearchResults.classList.add(
+    'active'
+  );
+
+
+  if (!results.length) {
+
+    planSearchResults.innerHTML = `
+
+      <div class="search-empty">
+        Ничего не найдено
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  planSearchResults.innerHTML = '';
+
+
+  results.forEach(account => {
+
+    const result =
+      document.createElement('div');
+
+    result.className =
+      'plan-search-result';
+
+
+    result.innerHTML = `
+
+      <span class="result-code">
+        ${highlight(
+          account.code,
+          q
+        )}
+      </span>
+
+      <span class="result-name">
+        ${highlight(
+          account.name,
+          q
+        )}
+      </span>
+
+    `;
+
+
+    result.addEventListener(
+      'click',
+      () => {
+
+        openAccountInCards(account);
+
+      }
+    );
+
+
+    planSearchResults.appendChild(
+      result
+    );
+
+  });
+
+}
+
+
+planSearchInput.addEventListener(
+  'input',
+  event => {
+
+    renderPlanSearch(
+      event.target.value
+    );
+
+  }
+);
+
+
+/* =========================================================
+   ACCOUNT FROM PLAN → CARD GAME
+========================================================= */
+
+function openAccountInCards(account) {
+
+  newDeck();
+
+
+  const idx =
+    deck.findIndex(
+      item =>
+        item.code === account.code
+    );
+
+
+  if (idx !== -1) {
+
+    pos = idx;
+
+  }
+
+
+  showCardsScreen();
+
+  cardEl.classList.add(
+    'flipped'
+  );
+
+}
+
+
+/* =========================================================
+   BACK BUTTONS
+========================================================= */
+
+document
+  .getElementById('planBack')
+  .addEventListener(
+    'click',
+    () => {
+
+      showEmptyScreen();
+
+    }
+  );
+
+
+/* =========================================================
+   ORIENTATION
+========================================================= */
+
+function syncDrawerByOrientation() {
+
+  const isLandscape =
+    window.matchMedia('(orientation: landscape)').matches;
+
+  if (isLandscape) {
+    drawer.classList.add('open');
+    overlay.classList.remove('open');
+  } else {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+}
+
+window.addEventListener('resize', syncDrawerByOrientation);
+window.addEventListener('orientationchange', syncDrawerByOrientation);
+syncDrawerByOrientation();
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+showEmptyScreen();
+
+buildMenu('');
+
+newDeck();
+
+</script>
+
+</body>
+</html>
