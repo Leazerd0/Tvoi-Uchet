@@ -1,0 +1,9 @@
+{
+  "name": "Твой Учет",
+  "short_name": "Твой Учет",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3EBDD",
+  "theme_color": "#24483A"
+}
